@@ -12,21 +12,27 @@
   let currentStep;
 
   const steps = [
-    "<p>This is 60 minutes.</p>",
-    "<p>For every 60 minutes of leisure time men have.</p>",
-    "<p>Women have 10 minutes less.</p>",
-    "<p>For every 60 minutes of unpaid care work men do.</p>",
-    "<p>Women do 60 minutes more.</p>",
-    "<p>This is 52 weeks or a year. Let's see how these time gaps add up over time.</p>",
+    "<h4>This is 60 minutes.</h4>",
+    "<h4>For every 60 minutes of leisure time men have,</h4>",
+    "<h4>women have 10 minutes less.</h4>",
+    "<h4>For every 60 minutes of unpaid care work men do,</h4>",
+    "<h4>women do 60 minutes more.</h4>",
+    "<h4>This is 52 weeks or a year. Let's see how these time gaps add up over time.</h4>",
   ];
 </script>
+
+<svelte:head>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Mansalva&display=swap");
+  </style>
+</svelte:head>
 
 <section>
   <Filter />
   <div class="hero">
     <h1>
-      According to a UN survey of 33 countries on time spent by gender, women
-      around the world spend less leisure time than men.
+      According to time use data published by OECD Gender Data in 2020, across
+      all 33 countries surveyed, women spend less leisure time than men.
     </h1>
     <h2>
       By <a href="https://twitter.com/CL_Rothschild" target="_blank">Connor</a>
@@ -48,8 +54,9 @@
       <!-- <Scatterplot step={value} /> -->
     </div>
   </div>
-
+  <div class="spacer" />
   <Waffle />
+  <div class="spacer" />
   <Country />
 </section>
 
@@ -73,7 +80,7 @@
   }
 
   .spacer {
-    height: 40vh;
+    height: 20vh;
   }
 
   .sticky {
@@ -100,23 +107,24 @@
 
   .step-content {
     font-size: 1rem;
-    background: whitesmoke;
-    color: #ccc;
+    justify-content: center;
+    /* background: whitesmoke; */
+    /* color: #ccc;
     border-radius: 5px;
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    transition: background 500ms ease;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
-    text-align: left;
-    width: 75%;
+    /* justify-content: center; */
+    /* transition: background 500ms ease; */
+    /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); */
+    text-align: center;
+    width: 100%;
     margin: auto;
     max-width: 500px;
   }
 
   .step.active .step-content {
-    background: white;
+    /* background: white; */
     color: black;
   }
 

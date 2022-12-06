@@ -1,9 +1,13 @@
 <script>
   import { onMount } from "svelte";
   import * as d3 from "d3";
+  import Slider from "@bulatdashiev/svelte-slider";
   import { annotate } from "https://unpkg.com/rough-notation?module";
+  import { svg } from "d3";
 
   let data;
+
+  let value = [18, 100];
 
   let comparison = {
     Men: { Leisure: 13, "Unpaid care work": 10, "Paid work or study": 4 },
@@ -22,7 +26,7 @@
   //Section 2: Create Waffle Chart
   let columns = 52,
     rows = 48,
-    squareSize = 7,
+    squareSize = 8,
     squareValue = 1,
     gap = 2,
     total = rows * columns,
@@ -33,28 +37,14 @@
       "Personal care",
       "Other",
     ],
-    category2 = [
-      "Leisure",
-      "Unpaid care",
-      "Paid work/study",
-      "Personal",
-      "Other",
-    ],
-    colors = ["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"],
-    margin = 40,
-    width = squareSize * columns + columns * gap + margin,
-    height = squareSize * rows + rows * gap;
+    width = squareSize * columns + columns * gap + 25,
+    height = squareSize * rows + rows * gap + 25;
 
   let waffleData = [],
     // let newData,
     uniqueAge,
     colorWaffleScale,
     yWaffleScale;
-
-  colorWaffleScale = d3
-    .scaleOrdinal()
-    .domain(category)
-    .range(["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"]);
 
   function drawWaffle(data, data2, age) {
     let newData = data2.filter((d) => d.age <= age);
@@ -64,7 +54,7 @@
       .attr("id", data[0].toLowerCase())
 
       .attr("width", width)
-      .attr("height", height + margin);
+      .attr("height", height);
 
     waffle
       .append("g")
@@ -82,9 +72,7 @@
         let colIndex = Math.floor(i % columns);
         return colIndex * squareSize + colIndex * gap;
       })
-      .attr("y", (d) => yWaffleScale(d.age) + 25);
-
-    waffle.append("g").append("text").text(data[0]).attr("x", 0).attr("y", 10);
+      .attr("y", (d) => yWaffleScale(d.age));
   }
 
   function prepareData(data) {
@@ -129,6 +117,11 @@
       .range([0, height])
       .domain(uniqueAge)
       .padding(0.1);
+
+    colorWaffleScale = d3
+      .scaleOrdinal()
+      .domain(category)
+      .range(["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"]);
   }
 
   function calculator(data, sliderValue, comparison) {
@@ -150,7 +143,7 @@
     });
 
     let summary = document.querySelector("#summary");
-    summary.innerHTML = `<p>By age of <span>${sliderValue}</span>, women have <span class="leisure" style="color:#AFBAFC; font-size:1.2rem"><strong>${diff["Leisure"]}</strong></span> weeks less leisure time and  <span class="unpaid" style="color:#FBBE85;font-size:1.2rem"  ><strong>${diff["Unpaid care work"]}</strong> </span> weeks more unpaid care time than men. They also have <span class="paid" style="color:#92C5E1; font-size:1.2rem"><strong>${diff["Paid work or study"]}</strong></span> weeks less paid work or study.</p>`;
+    summary.innerHTML = `<p>By age of <span>${sliderValue}</span>,women have ${diff["Leisure"]} weeks less leisure time and ${diff["Unpaid care work"]} weeks more unpaid care time than men. They also have ${diff["Paid work or study"]} weeks less paid work or study.</p>`;
   }
 
   function clearLayout() {
@@ -161,7 +154,7 @@
     var output = document.getElementById("title");
     output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight">${slider.value}</span></h4>`; // Display the default slider value
     let summary = document.querySelector("#summary");
-    summary.innerHTML = `<p>On average, at the age of <span>18</span>, women have <span class="leisure" style="color:#AFBAFC; font-size:1.2rem"><strong>1</strong></span> weeks less leisure time than men.`;
+    summary.innerHTML = `<p>On average, at the age of <span>18</span>, women have 1 weeks less leisure time than men.`;
 
     data = await d3.csv(
       "https://raw.githubusercontent.com/muonius/msdv-major-studio-1/18a455a8578d79f5f265193eca5e591df8c0caf8/03_interactive_project/data/age.csv"
@@ -170,18 +163,17 @@
     // Initial setup
     dataGender.forEach((data) => {
       prepareData(data);
+      console.log(waffleData);
       initializeLayout();
       drawWaffle(data, waffleData, 18);
     });
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function () {
-      clearLayout();
       const waffleGender = d3.groups(waffleData, (d) => d.gender);
       waffleGender.forEach((d) => {
-        initializeLayout();
         drawWaffle(d, d[1], this.value);
       });
-      output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight">${slider.value}</span></h4>`;
+
       if (this.value > 18) {
         calculator(data, this.value, comparison);
       } else {
@@ -195,78 +187,69 @@
 
 <!-- <Filter /> -->
 <div class="waffle">
-  <div id="title" />
-  <div class="legend">
-    <svg viewBox="0 0 900 100" transform="translate(400,0)">
-      {#each category as c, index (index)}
-        <rect
-          y={0}
-          x={20 * index + 70 * index}
-          width={8}
-          height={8}
-          fill={colorWaffleScale(c)}
-        />
-        <text
-          y={8}
-          x={12 + 20 * index + 70 * index}
-          font-size="0.6rem"
-          dominant-baseline="text-top"
-          text-anchor="top">{category2[index]}</text
-        >
-      {/each}
-    </svg>
+  <div class="title">
+    <h4>
+      Slide to Compare Time Spent at The Age of <span class="highlight"
+        >{value}</span
+      >
+    </h4>
+    <Slider min="18" max="65" step="1" bind:value />
   </div>
   <div class="slidecontainer">
-    <span>18 </span><input
+    <span>18</span><input
       type="range"
       min="18"
       max="65"
       value="18"
       class="slider"
       id="slider"
-    /><span> 65</span>
+      on:input={() => {
+        clearLayout();
+        initializeLayout();
+      }}
+    /><span>65</span>
   </div>
   <div id="summary" />
-  <div id="waffle" />
+  <div class="test">
+    <svg>
+      <g>
+        {#each waffleData as waffle, index (index)}
+          <rect
+            x="50"
+            y={yWaffleScale(waffle.age)}
+            width={squareSize}
+            height={squareSize}
+            fill="black"
+          />
+        {/each}
+      </g>
+    </svg>
+  </div>
 </div>
 
 <style>
-  .legend {
-    height: 3vh;
-    width: 100%;
-    background: "red";
+  #title {
+    padding-top: 1rem;
   }
-
-  .grit {
-    -webkit-mask-image: url("https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/");
-    mask-image: url("https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/");
-  }
-
   .waffle {
-    /* padding-top: 0.5rem; */
     background: whitesmoke;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 95vh;
+    height: 80vh;
     max-width: 100%;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     top: 10%;
     margin: auto;
-    padding-bottom: 2rem;
   }
 
   .slider {
     -webkit-appearance: none;
-    width: 30%;
+    width: 40%;
     height: 4px;
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
-    filter: url("#watercolor-3");
   }
 
   .slider:hover {

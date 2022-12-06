@@ -26,7 +26,7 @@
       in2="noise-lg"
       xChannelSelector="G"
       yChannelSelector="R"
-      scale="6"
+      scale="2"
     />
 
     <!-- <feMorphology result="glow-diff" in="glow" operator="erode" radius="2" /> -->
@@ -157,6 +157,19 @@
 
   <filter id="watercolor-3">
     <feTurbulence baseFrequency="0.05" />
-    <feDisplacementMap in="SourceGraphic" scale="2" />
+    <feDisplacementMap in="SourceGraphic" scale="3" />
+  </filter>
+
+  <filter id="paper" x="0%" y="0%" width="100%" height="100%">
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.05"
+      result="noise"
+      numOctaves="10"
+    />
+
+    <feDiffuseLighting in="noise" lighting-color="white" surfaceScale="2">
+      <feDistantLight azimuth="45" elevation="60" />
+    </feDiffuseLighting>
   </filter>
 </svg>

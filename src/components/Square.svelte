@@ -4,75 +4,81 @@
   import { fly } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
 
-  let data = [
-    { foo: 1, bar: 1 },
-    { foo: 6, bar: 7 },
-    { foo: 2, bar: 4 },
-  ];
-
-  $: womenWidth = 90;
-  $: womenHeight = 100;
+  let width;
+  let height;
+  $: square = width / 10;
+  $: gap = square / 10;
+  $: womenWidth = (width * 0.9) / 10;
+  $: womenHeight = width / 10;
 
   import { tweened } from "svelte/motion";
-  const tweenedY = tweened(0, {
+
+  $: tweenedX = tweened(width / 2 - square / 2, {
     duration: 1000,
     easing: cubicOut,
   });
 
-  const tweenedY2 = tweened(0, {
+  $: tweenedY = tweened(height + square, {
     duration: 1000,
     easing: cubicOut,
   });
 
-  const tweenedX = tweened(4.5, {
+  $: tweenedX2 = tweened((width * 5) / 6 - square / 2, {
     duration: 1000,
     easing: cubicOut,
   });
 
-  const tweenedX2 = tweened(8, {
+  $: tweenedY2 = tweened(height + square, {
     duration: 1000,
     easing: cubicOut,
   });
 
-  const tweenedX3 = tweened(11, {
+  $: tweenedX3 = tweened(width + square, {
+    duration: 1000,
+    easing: cubicOut,
+  });
+
+  $: tweenedY3 = tweened(height / 2 - square / 2, {
     duration: 1000,
     easing: cubicOut,
   });
 
   const menUp = function () {
-    tweenedY.set(6);
+    tweenedY.set(height / 2 - square / 2);
   };
 
   const menSide = function () {
-    tweenedX.set(1);
+    tweenedX.set(width / 6 - square / 2);
   };
 
   const womenUp = function () {
-    tweenedY2.set(6);
+    tweenedY2.set(height / 2 - square / 2);
   };
 
   const womenSide = function () {
-    tweenedX2.set(8);
+    tweenedX2.set((width * 4.8) / 6 - square / 2);
   };
   const leisureOverlap = function () {
-    tweenedX.set(4);
-    tweenedX2.set(4);
+    tweenedX.set(width / 2 - square / 2);
+    tweenedX2.set(width / 2 - square / 2);
   };
 
   const womenSecond = function () {
-    tweenedX3.set(9);
-    womenWidth = 100;
+    tweenedX3.set((width * 4.8) / 6 - square / 2 + square + gap);
+    tweenedY3.set(height / 2 - square / 2);
+    womenWidth = width / 10;
   };
 
   const unpaidOverlap = function () {
-    tweenedX.set(4);
-    tweenedX2.set(4);
-    tweenedX3.set(5);
+    tweenedX.set(width / 2 - square / 2);
+    tweenedX2.set(width / 2 - square / 2);
+    tweenedX3.set(width / 2 - square / 2 + square + gap);
   };
 
   const moveTo52 = function () {
-    tweenedY.set(0);
-    tweenedY2.set(0);
+    tweenedY.set(0 - square * 2);
+    tweenedY2.set(0 - square * 2);
+    tweenedY3.set(0 - square * 2);
     // const squares = document.querySelectorAll(".fivetwo");
     // squares.setAttribute("class", "show");
   };
@@ -107,90 +113,119 @@
   }
 
   //   import * as d3 from "d3";
-  import { scaleLinear } from "d3-scale";
+  import { scaleBand } from "d3-scale";
   import { extent, min, max } from "d3-array";
 
-  let width = 400;
-  let height = 400;
-  let square = 100;
   const margin = { top: 30, bottom: 30, left: 30, right: 30 };
 
-  $: xScale = scaleLinear().domain([0, 10]).range([0, width]);
+  let domains = [];
+  for (let i = 0; i < 52; i++) {
+    domains.push(i);
+  }
 
-  $: yScale = scaleLinear().domain([0, 10]).range([height, 0]);
+  $: xScale = scaleBand()
+    .domain(domains)
+    .range([margin.left, width - margin.right])
+    .padding(0.1);
 </script>
 
 <section>
-  <div class="filter" />
-  <div class="chart" bind:offsetWidth={width} bind:offsetHeight={height}>
-    <svg width={width + margin.right + margin.left} {height}>
-      <!-- <text class=active==false x={xScale($tweenedX)} y={yScale($tweenedY) - 20}>Men</text> -->
-      <rect
-        class="men"
-        x={xScale($tweenedX)}
-        y={yScale($tweenedY)}
-        width={100}
-        height={100}
-        stroke={step == 0 ? "black" : step <= 2 ? "#AFBAFC" : "orange"}
-        fill="transparent"
-        stroke-width="5px"
-      />
+  <div class="filter">
+    <div class="chart" bind:clientWidth={width} bind:clientHeight={height}>
+      <svg width={width + margin.right + margin.left} {height}>
+        <rect class="test" x="0" y="0" {width} {height} rx="15" />
+        <!-- <text class=active==false x={xScale($tweenedX)} y={yScale($tweenedY) - 20}>Men</text> -->
+        {#if step == 1}
+          <text x={$tweenedX + square / 3} y={$tweenedY - gap}>Men</text>
+          <text x={$tweenedX2 + square / 4} y={$tweenedY2 - gap}>Women</text>
+        {/if}
 
-      <rect
-        class="women"
-        x={xScale($tweenedX2)}
-        y={yScale($tweenedY2)}
-        width={womenWidth}
-        height={womenHeight}
-        fill={step <= 2 ? "#AFBAFC" : "orange"}
-        stroke-width="20px"
-      />
+        {#if step == 3}
+          <text x={$tweenedX + square / 3} y={$tweenedY - gap}>Men</text>
+          <text
+            x={$tweenedX3 + square / 4}
+            y={$tweenedY3 - gap}
+            text-anchor="top">Women</text
+          >
+        {/if}
+        <rect
+          class="men"
+          x={$tweenedX}
+          y={$tweenedY}
+          width={square}
+          height={square}
+          stroke={step == 0 ? "black" : step <= 2 ? "#AFBAFC" : "orange"}
+          fill="transparent"
+          stroke-width="5px"
+        />
 
-      <rect
-        class="women"
-        x={xScale($tweenedX3)}
-        y={yScale($tweenedY2)}
-        width={womenWidth}
-        height={womenHeight}
-        fill={step <= 2 ? "#AFBAFC" : "orange"}
-        stroke-width="20px"
-      />
-      {#if step == 5}
-        {#each Array(52) as _, index (index)}
-          <rect
-            in:fly={{ y: 200 }}
-            out:fade
-            class={step == 5 ? "show" : ""}
-            opacity="0"
-            filter="url(#watercolor-1)"
-            x={9 * index + 5 * index}
-            y={height / 2}
-            width="9"
-            height="9"
-            stroke="black"
-            fill="transparent"
-            stroke-width="1.5px"
-          />
-        {/each}
-      {/if}
-    </svg>
+        <rect
+          class="women"
+          x={$tweenedX2}
+          y={$tweenedY2}
+          width={womenWidth}
+          height={womenHeight}
+          fill={step <= 2 ? "#AFBAFC" : "orange"}
+          stroke-width="20px"
+        />
+
+        <rect
+          class="women"
+          opacity={step >= 3 ? 1 : 0}
+          x={$tweenedX3}
+          y={$tweenedY3}
+          width={womenWidth}
+          height={womenHeight}
+          fill="orange"
+          stroke-width="20px"
+        />
+        {#if step == 5}
+          {#each domains as domain, index (index)}
+            <rect
+              class={step == 5 ? "show" : ""}
+              filter="url(#watercolor-2)"
+              x={xScale(domain)}
+              y={height / 2 - square / 12}
+              width={square / 8}
+              height={square / 8}
+              stroke="black"
+              fill="transparent"
+              stroke-width="1.5px"
+            />
+          {/each}
+        {/if}
+      </svg>
+    </div>
   </div>
 </section>
 
 <style>
   /* The fixed chart */
+  /* svg {
+    overflow: "auto";
+  } */
+
+  .test {
+    filter: url(#paper);
+    opacity: 0.5;
+  }
+
   .chart {
     background: whitesmoke;
     height: 80vh;
     max-width: 100%;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
     position: sticky;
     top: 10%;
     margin: auto;
   }
-
   .show {
-    opacity: 1;
+    opacity: 0.8;
+  }
+
+  #show {
+    opacity: 0.8;
   }
 
   .men,
@@ -198,4 +233,7 @@
     filter: url(#watercolor-2);
     opacity: 1;
   }
+
+  /* in:fly={{ y: 200, duration: 3000 }}
+out:fade */
 </style>
