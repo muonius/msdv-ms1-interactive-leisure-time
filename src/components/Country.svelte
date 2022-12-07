@@ -39,7 +39,7 @@
 
   function drawData(d) {
     const stackedData = stackGenerator(d[1]);
-    console.log(stackedData);
+    // console.log(stackedData);
     const svg = d3
       .select("#stack")
       .append("svg")
@@ -51,7 +51,7 @@
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // .attr("transform", `translate(10) rotate(45)`)
-    svg
+    const stacks = svg
       .selectAll("g")
       // Enter in the stack data = loop key per key = group per group
       .data(stackedData)
@@ -68,12 +68,42 @@
       .attr("height", (d) => yStackScale(d[0]) - yStackScale(d[1]))
       .attr("width", xStackScale.bandwidth());
 
-    svg
+    const labels = svg
       .append("text")
       .text(d[0])
       .attr("x", 20)
       .attr("y", height2)
       .attr("dy", 15);
+
+    stacks.on("mouseover", onMouseEnter).on("mouseleave", onMouseLeave);
+
+    const tooltip = d3.select("#tooltip");
+
+    function onMouseEnter(event, datum) {
+      function check(data) {
+        return typeof data === "number" ? `${data * 100}%` : data;
+      }
+      let html = "";
+      for (const key in datum.data) {
+        html += `<table><tr><td><strong>${key}:</strong></td><td>${check(
+          datum.data[key]
+        )}</td></tr></table>`;
+      }
+
+      tooltip.html(html).style("color", "black");
+
+      // console.log(event.pageX);
+      tooltip.style("top", `${event.clientY - 5}px`);
+      tooltip.style("left", event.clientX + "px");
+
+      tooltip.style("opacity", 1);
+    }
+
+    function onMouseLeave(event) {
+      d3.select(this);
+      tooltip.style("opacity", 0);
+      tooltip.html("");
+    }
   }
 
   function initializeLayout() {
@@ -111,6 +141,7 @@
       This is how men and women spend their time differently around the world.
     </h4>
   </div>
+
   <div class="legend">
     <svg viewBox="0 0 900 40" transform="translate(400,0)">
       {#each category as c, index (index)}
@@ -131,11 +162,18 @@
       {/each}
     </svg>
   </div>
+
   <div id="stack" />
+  <div id="tooltip">
+    <div id="tooltip-country" />
+    <div id="tooltip-category" />
+    <div id="tooltip-ratio" />
+  </div>
 </div>
 
 <style>
   .country {
+    position: relative;
     padding-top: 1rem;
     background: whitesmoke;
     /* height: 90vh; */
@@ -143,5 +181,23 @@
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
     top: 10%;
     margin: auto;
+  }
+
+  #tooltip {
+    opacity: 0;
+    position: absolute;
+    top: 10px;
+    /* right: 50px;  */
+    width: 15em;
+    padding: 0.5em 0.5em;
+    /* justify-content: space-between; */
+    background: #fff;
+    text-align: center;
+    line-height: 1.4em;
+    font-size: 0.8em;
+    border: 1px solid #ddd;
+    z-index: 100;
+    pointer-events: none;
+    /* background:red */
   }
 </style>
