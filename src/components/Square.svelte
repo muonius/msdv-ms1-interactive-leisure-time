@@ -116,7 +116,7 @@
   import { scaleBand } from "d3-scale";
   import { extent, min, max } from "d3-array";
 
-  const margin = { top: 30, bottom: 30, left: 30, right: 30 };
+  const margin = { top: 30, bottom: 30, left: 20, right: 20 };
 
   let domains = [];
   for (let i = 0; i < 52; i++) {

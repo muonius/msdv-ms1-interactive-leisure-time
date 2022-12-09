@@ -80,7 +80,7 @@
   }
 
   .spacer {
-    height: 20vh;
+    height: 10vh;
   }
 
   .sticky {
@@ -120,7 +120,7 @@
     text-align: center;
     width: 100%;
     margin: auto;
-    max-width: 500px;
+    /* max-width: 500px; */
   }
 
   .step.active .step-content {

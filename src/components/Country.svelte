@@ -39,7 +39,7 @@
 
   function drawData(d) {
     const stackedData = stackGenerator(d[1]);
-    // console.log(stackedData);
+    console.log(stackedData[0]);
     const svg = d3
       .select("#stack")
       .append("svg")
@@ -56,13 +56,26 @@
       // Enter in the stack data = loop key per key = group per group
       .data(stackedData)
       .join("g")
+      .attr("fill", "none")
       .attr("fill", (d) => colorStackScale(d.key))
+      .attr("stroke", (d) => colorStackScale(d.key))
+      .attr("stroke-width", "4px")
       .selectAll("rect")
       // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data((d) => d)
+      .data((d, i) => d)
       .join("rect")
       // .attr("opacity", "0.8")
       .attr("filter", "url(#watercolor-2)")
+      .style("fill", (d) => {
+        if (d.data.Gender == "Men") {
+          return "none";
+        }
+      })
+      .style("stroke-width", (d) => {
+        if (d.data.Gender == "Women") {
+          return "2px";
+        }
+      })
       .attr("x", (d) => xStackScale(d.data.Gender))
       .attr("y", (d) => yStackScale(d[1]))
       .attr("height", (d) => yStackScale(d[0]) - yStackScale(d[1]))
@@ -116,7 +129,7 @@
       .scaleBand()
       .domain(["Men", "Women"])
       .range([0, width2])
-      .padding([0.05]);
+      .padding([0.01]);
 
     yStackScale = d3.scaleLinear().domain([0, 1]).range([height2, 0]);
   }
@@ -135,51 +148,80 @@
   });
 </script>
 
-<div class="country">
-  <div>
-    <h4>
-      This is how men and women spend their time differently around the world.
-    </h4>
+<div class="container">
+  <div class="overlay">
+    <!-- <svg width="100%" height="165vh" class="test" /> -->
   </div>
+  <div class="country">
+    <div>
+      <h4>
+        This is how men and women spend their time differently around the world.
+      </h4>
+    </div>
 
-  <div class="legend">
-    <svg viewBox="0 0 900 40" transform="translate(400,0)">
-      {#each category as c, index (index)}
-        <rect
-          y={0}
-          x={20 * index + 70 * index}
-          width={8}
-          height={8}
-          fill={colorWaffleScale(c)}
-        />
-        <text
-          y={8}
-          x={12 + 20 * index + 70 * index}
-          font-size="0.6rem"
-          dominant-baseline="text-top"
-          text-anchor="top">{category3[index]}</text
-        >
-      {/each}
-    </svg>
-  </div>
+    <div class="legend">
+      <svg viewBox="0 0 900 20">
+        {#each category as c, index (index)}
+          <rect
+            y={0}
+            x={180 + 120 * index}
+            width={10}
+            height={10}
+            fill={colorWaffleScale(c)}
+          />
+          <text
+            y={8}
+            x={200 + 120 * index}
+            font-size="0.7rem"
+            dominant-baseline="text-top"
+            text-anchor="top">{category3[index]}</text
+          >
+        {/each}
+      </svg>
+    </div>
 
-  <div id="stack" />
-  <div id="tooltip">
-    <div id="tooltip-country" />
-    <div id="tooltip-category" />
-    <div id="tooltip-ratio" />
+    <div id="stack" />
+    <div id="tooltip" />
   </div>
 </div>
 
 <style>
-  .country {
+  .overlay {
+    filter: url(#paper);
+    overflow: hidden;
+    opacity: 0.5;
+    height: 170vh;
+    margin: auto;
+  }
+
+  .container {
+    overflow: auto;
     position: relative;
-    padding-top: 1rem;
-    background: whitesmoke;
-    /* height: 90vh; */
-    max-width: 100%;
+    display: block;
+    /* flex-direction: column;
+    justify-content: space-between; */
+    height: 140vh;
+    max-width: 95%;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
-    top: 10%;
+    border-radius: 10px;
+    /* top: 10%; */
+    margin: auto;
+    height: 160vh;
+    /* padding-bottom: 2rem; */
+    /* z-index: 10000; */
+    /* overflow: scroll; */
+  }
+
+  .country {
+    position: absolute;
+    padding-top: 1rem;
+    /* background: whitesmoke; */
+    /* height: 90vh; */
+    max-width: 95%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     margin: auto;
   }
 

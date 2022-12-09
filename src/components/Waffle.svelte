@@ -72,11 +72,18 @@
       .data(newData)
       .join("rect")
       .attr("class", "watercolor")
-      .attr("opacity", 0.8)
+      // .attr("opacity", 0.8)
       .attr("filter", "url(#watercolor-3)")
       .attr("width", squareSize)
       .attr("height", squareSize)
       .attr("fill", (d) => colorWaffleScale(d.category))
+      .attr("stroke", (d) => colorWaffleScale(d.category))
+      .attr("stroke-width", data[0] == "Men" ? "1.5px" : "0.5px")
+      .style("fill", (d) => {
+        if (data[0] == "Men") {
+          return "none";
+        }
+      })
       .attr("x", function (d, i) {
         //group n squares for column
         let colIndex = Math.floor(i % columns);
@@ -194,68 +201,107 @@
 </script>
 
 <!-- <Filter /> -->
-<div class="waffle">
-  <div id="title" />
-  <div class="legend">
-    <svg viewBox="0 0 900 100" transform="translate(400,0)">
-      {#each category as c, index (index)}
-        <rect
-          y={0}
-          x={20 * index + 70 * index}
-          width={8}
-          height={8}
-          fill={colorWaffleScale(c)}
-        />
-        <text
-          y={8}
-          x={12 + 20 * index + 70 * index}
-          font-size="0.6rem"
-          dominant-baseline="text-top"
-          text-anchor="top">{category2[index]}</text
-        >
-      {/each}
-    </svg>
+<div class="container">
+  <div class="overlay">
+    <!-- <svg class="test" /> -->
   </div>
-  <div class="slidecontainer">
-    <span>18 </span><input
-      type="range"
-      min="18"
-      max="65"
-      value="18"
-      class="slider"
-      id="slider"
-    /><span> 65</span>
+  <div class="waffle">
+    <div id="title" />
+    <div class="legend">
+      <svg viewBox="0 0 900 20">
+        {#each category as c, index (index)}
+          <rect
+            y={0}
+            x={180 + 120 * index}
+            width={10}
+            height={10}
+            fill={colorWaffleScale(c)}
+          />
+          <text
+            y={8}
+            x={200 + 120 * index}
+            font-size="0.7rem"
+            dominant-baseline="text-top"
+            text-anchor="top">{category2[index]}</text
+          >
+        {/each}
+      </svg>
+    </div>
+    <div class="slidecontainer">
+      <span>18 </span><input
+        type="range"
+        min="18"
+        max="65"
+        value="18"
+        class="slider"
+        id="slider"
+      /><span> 65</span>
+    </div>
+    <div id="summary" />
+    <div id="waffle" />
+    <div style="clear:both;"><!--clear--></div>
   </div>
-  <div id="summary" />
-  <div id="waffle" />
 </div>
 
 <style>
-  .legend {
-    height: 3vh;
+  .overlay {
+    filter: url(#paper);
+    overflow: hidden;
+    opacity: 0.5;
     width: 100%;
-    background: "red";
+    height: 100vh;
+    /* padding-bottom: calc(100%); */
   }
 
-  .grit {
-    -webkit-mask-image: url("https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/");
-    mask-image: url("https://ucarecdn.com/9514f9b1-3bf9-4b7c-b31d-9fb8cd6af8bf/");
-  }
-
-  .waffle {
-    /* padding-top: 0.5rem; */
-    background: whitesmoke;
+  .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 95vh;
-    max-width: 100%;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+    min-height: 90vh;
+    max-width: 95%;
+    /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); */
     border-radius: 10px;
     top: 10%;
     margin: auto;
-    padding-bottom: 2rem;
+    /* padding-bottom: 2rem; */
+    z-index: 10000;
+    /* overflow: scroll; */
   }
+
+  .waffle {
+    position: absolute;
+    /* padding-top: 0.5rem; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 100vh;
+    width: 100%;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+
+  #summary {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* #waffle {
+    padding-left: 2rem;
+  } */
+  /* .overlay {
+    min-height: 100vh;
+    /* position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; */
+  /* height: 100%;
+    width: 100%;
+    opacity: 0.2;
+    z-index: 1; */
+  /* } */
 
   .slider {
     -webkit-appearance: none;
@@ -263,7 +309,7 @@
     height: 4px;
     background: #d3d3d3;
     outline: none;
-    opacity: 0.7;
+    /* opacity: 0.7; */
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
     filter: url("#watercolor-3");
