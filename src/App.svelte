@@ -76,7 +76,9 @@
       alt="LinkedIn Icon"
       width="14px"
     /><span id="filler" />
-    <a href="https://github.com/muonius/msdv-state-of-the-union" target="_blank"
+    <a
+      href="https://github.com/muonius/msdv-ms1-interactive-leisure-time"
+      target="_blank"
       ><img
         class="icon github"
         src="./Github_Icon.svg"
