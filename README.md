@@ -1,5 +1,7 @@
 # Gender Gap in Time Use
 
+   <img src="./public/cover.png" width="800" alt="cover">
+
 This is the final interactive project at my Major Studio 1 class in collaboration with the UN. I picked Gender Equality as my umbrella theme.
 
 ### Concept and Inspiration
