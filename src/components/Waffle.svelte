@@ -40,7 +40,8 @@
       "Personal",
       "Other",
     ],
-    colors = ["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"],
+    colors = ["#AFBAFC", "#efcfe3", "#b392ac", "#adc178", "#bbd0ff"],
+    // colors = ["#4a4e69", "#FBBE85", "#386641", "#e07a5f", "#adc178"],
     margin = 40,
     width = squareSize * columns + columns * gap + margin,
     height = squareSize * rows + rows * gap;
@@ -51,10 +52,7 @@
     colorWaffleScale,
     yWaffleScale;
 
-  colorWaffleScale = d3
-    .scaleOrdinal()
-    .domain(category)
-    .range(["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"]);
+  colorWaffleScale = d3.scaleOrdinal().domain(category).range(colors);
 
   function drawWaffle(data, data2, age) {
     let newData = data2.filter((d) => d.age <= age);
@@ -157,7 +155,7 @@
     });
 
     let summary = document.querySelector("#summary");
-    summary.innerHTML = `<p>By age of <span>${sliderValue}</span>, women have <span class="leisure" style="color:#AFBAFC; font-size:1.2rem"><strong>${diff["Leisure"]}</strong></span> weeks less leisure time and  <span class="unpaid" style="color:#FBBE85;font-size:1.2rem"  ><strong>${diff["Unpaid care work"]}</strong> </span> weeks more unpaid care time than men. They also have <span class="paid" style="color:#92C5E1; font-size:1.2rem"><strong>${diff["Paid work or study"]}</strong></span> weeks less paid work or study.</p>`;
+    summary.innerHTML = `<p>By age of <span><strong>${sliderValue}</strong></span>, women have <span class="leisure" style="padding-left: 5px; padding-right:5px;background:#AFBAFC; font-size:1.2rem"><strong>${diff["Leisure"]}</strong></span> weeks less leisure time and <span class="unpaid" style="padding-left: 5px; padding-right:5px; background:#dbcbd8;font-size:1.2rem" ><strong>${diff["Unpaid care work"]}</strong> </span> weeks more unpaid care time than men. They also have <span class="paid" style="padding-left: 5px; padding-right:5px; background:#b392ac; font-size:1.2rem"><strong>${diff["Paid work or study"]}</strong></span> weeks less paid work or study.</p>`;
   }
 
   function clearLayout() {
@@ -166,9 +164,9 @@
   onMount(async () => {
     var slider = document.getElementById("slider");
     var output = document.getElementById("title");
-    output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight">${slider.value}</span></h4>`; // Display the default slider value
+    output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight"  style="text-decoration:underline; color:cornflowerblue">${slider.value}</span></h4>`; // Display the default slider value
     let summary = document.querySelector("#summary");
-    summary.innerHTML = `<p>On average, at the age of <span>18</span>, women have <span class="leisure" style="color:#AFBAFC; font-size:1.2rem"><strong>1</strong></span> weeks less leisure time than men.`;
+    summary.innerHTML = `<p>On average, at the age of <span><strong>18</strong></span>, women have <span class="leisure" style="padding-left: 5px; padding-right:5px;background:#AFBAFC; font-size:1.2rem"><strong>1</strong></span> weeks less leisure time than men.</p>`;
 
     data = await d3.csv(
       "https://raw.githubusercontent.com/muonius/msdv-major-studio-1/18a455a8578d79f5f265193eca5e591df8c0caf8/03_interactive_project/data/age.csv"
@@ -188,11 +186,11 @@
         initializeLayout();
         drawWaffle(d, d[1], this.value);
       });
-      output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight">${slider.value}</span></h4>`;
+      output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight" style="text-decoration:underline; color:cornflowerblue" >${slider.value}</span></h4>`;
       if (this.value > 18) {
         calculator(data, this.value, comparison);
       } else {
-        summary.innerHTML = `<p>On average, at the age of <span>18</span>, women have 1 weeks less leisure time than men.</p>`;
+        summary.innerHTML = `<p>On average, at the age of <span><strong>18</strong></span>, women have <span class="leisure" style="padding-left: 5px; padding-right:5px;background:#AFBAFC; font-size:1.2rem"><strong>1</strong></span> weeks less leisure time than men.</p>`;
       }
     };
     const n1 = document.querySelector(".highlight");
@@ -228,14 +226,16 @@
       </svg>
     </div>
     <div class="slidecontainer">
-      <span>18 </span><input
+      <span>Age 18 </span><input
         type="range"
         min="18"
         max="65"
         value="18"
         class="slider"
         id="slider"
-      /><span> 65</span>
+      /><span class="age"
+        ><p class="age" style="text-align: right">Age 65</p>
+      </span>
     </div>
     <div id="summary" />
     <div id="waffle" />
@@ -244,6 +244,18 @@
 </div>
 
 <style>
+  span.age {
+    position: relative;
+  }
+  p.age {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 60px;
+    padding-left: 2px;
+    text-align: right;
+  }
   .overlay {
     filter: url(#paper);
     overflow: hidden;
@@ -283,8 +295,10 @@
   }
 
   #summary {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    width: 60%;
+    margin: auto;
+    /* padding-left: 4rem;
+    padding-right: 4rem; */
   }
 
   /* #waffle {
@@ -328,10 +342,16 @@
     cursor: pointer;
   } */
 
-  .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    background: #04aa6d;
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* appearance: none; */
+    width: 20px;
+    height: 20px;
+    background: cornflowerblue;
+    border-radius: 20px;
     cursor: pointer;
+  }
+  .highlight {
+    text-decoration: underline;
   }
 </style>

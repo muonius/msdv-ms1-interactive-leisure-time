@@ -154,7 +154,7 @@
           y={$tweenedY}
           width={square}
           height={square}
-          stroke={step == 0 ? "black" : step <= 2 ? "#AFBAFC" : "orange"}
+          stroke={step == 0 ? "black" : step <= 2 ? "#AFBAFC" : "#efcfe3"}
           fill="transparent"
           stroke-width="5px"
         />
@@ -165,7 +165,7 @@
           y={$tweenedY2}
           width={womenWidth}
           height={womenHeight}
-          fill={step <= 2 ? "#AFBAFC" : "orange"}
+          fill={step <= 2 ? "#AFBAFC" : "#efcfe3"}
           stroke-width="20px"
         />
 
@@ -176,7 +176,7 @@
           y={$tweenedY3}
           width={womenWidth}
           height={womenHeight}
-          fill="orange"
+          fill="#efcfe3"
           stroke-width="20px"
         />
         {#if step == 5}

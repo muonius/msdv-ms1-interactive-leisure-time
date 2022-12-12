@@ -3,7 +3,6 @@
 	Scrollytelling component from Russell Goldenberg https://twitter.com/codenberg/status/1432774653139984387 */
 
   import Scrolly from "./components/Scrolly.svelte";
-  import Scatterplot from "./components/Scatterplot.svelte";
   import Filter from "./components/Filter.svelte";
   import Square from "./components/Square.svelte";
   import Waffle from "./components/Waffle.svelte";
@@ -28,16 +27,23 @@
 </svelte:head>
 
 <section>
-  <Filter />
+  <div class="cover" />
+
   <div class="hero">
     <h1>
       According to time use data published by OECD Gender Data in 2020, across
       all 33 countries surveyed, women spend less leisure time than men.
     </h1>
-    <h2>
-      By <a href="https://twitter.com/CL_Rothschild" target="_blank">Connor</a>
-    </h2>
+    <span>
+      <h3>
+        by Yang Zhao | December 2022 | <a
+          href="https://ourworldindata.org/grapher/minutes-spent-on-leisure?time=latest"
+          >Data Source</a
+        >
+      </h3></span
+    >
   </div>
+
   <div class="section-container">
     <div class="steps-container">
       <Scrolly bind:value={currentStep}>
@@ -58,13 +64,43 @@
   <Waffle />
   <div class="spacer" />
   <Country />
+  <Filter />
 </section>
+<footer>
+  Yang Zhao | Major Studio 1 Interactive Project | MS Data Visualization <a
+    href="https://www.linkedin.com/in/yangzhao1/"
+    target="_blank"
+    ><img
+      class="icon linkedin"
+      src="./LinkedIn_Icon.svg"
+      alt="LinkedIn Icon"
+      width="14px"
+    /><span id="filler" />
+    <a href="https://github.com/muonius/msdv-state-of-the-union" target="_blank"
+      ><img
+        class="icon github"
+        src="./Github_Icon.svg"
+        alt="Github Icon"
+        width="14px"
+      /></a
+    ></a
+  >
+</footer>
 
 <style>
   :global(body) {
     overflow-x: hidden;
   }
 
+  .cover {
+    /* width: 100%; */
+    height: 90vh;
+    background-image: url("/cover.png");
+    background-position: center;
+    background-size: cover;
+    /* background-attachment: fixed; */
+    /* background-repeat: round; */
+  }
   .hero {
     height: 60vh;
     display: flex;
@@ -148,6 +184,9 @@
     margin: auto;
   }
 
+  #filler {
+    width: 30px;
+  }
   /* @media screen and (max-width: 768px) {
     .section-container {
       flex-direction: column-reverse;

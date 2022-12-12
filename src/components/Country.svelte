@@ -19,10 +19,8 @@
     "Other",
   ];
 
-  let colorWaffleScale = d3
-    .scaleOrdinal()
-    .domain(category)
-    .range(["#AFBAFC", "#FBBE85", "#92C5E1", "#F47F33", "#FEF793"]);
+  let colors = ["#AFBAFC", "#efcfe3", "#b392ac", "#adc178", "#bbd0ff"];
+  let colorWaffleScale = d3.scaleOrdinal().domain(category).range(colors);
 
   let margin = { top: 20, right: 20, bottom: 20, left: 20 },
     width2 = 180 - margin.left - margin.right,
@@ -93,21 +91,29 @@
     const tooltip = d3.select("#tooltip");
 
     function onMouseEnter(event, datum) {
-      function check(data) {
-        return typeof data === "number" ? `${data * 100}%` : data;
+      function checkData(data) {
+        return isNaN(data) ? data : `${parseInt(data * 100)}%`;
       }
       let html = "";
       for (const key in datum.data) {
-        html += `<table><tr><td><strong>${key}:</strong></td><td>${check(
+        html += `<table><tr><td><strong>${key}:</strong></td><td>${checkData(
           datum.data[key]
         )}</td></tr></table>`;
       }
 
       tooltip.html(html).style("color", "black");
 
-      // console.log(event.pageX);
-      tooltip.style("top", `${event.clientY - 5}px`);
-      tooltip.style("left", event.clientX + "px");
+      const x = event.pageX;
+      const y = event.pageY;
+
+      tooltip.style("top", `${event.clientY + 100}px`);
+      tooltip.style("left", `${event.clientX - 100}px`);
+
+      // tooltip.style(
+      //   "transform",
+
+      //   `translate(` + `calc(-5% + ${x}px),` + `calc(5% + ${y}px)` + `)`
+      // );
 
       tooltip.style("opacity", 1);
     }
@@ -123,7 +129,7 @@
     colorStackScale = d3
       .scaleOrdinal()
       .domain(category2)
-      .range(["#FEF793", "#F47F33", "#92C5E1", "#FBBE85", "#AFBAFC"]);
+      .range(colors.reverse());
 
     xStackScale = d3
       .scaleBand()
@@ -190,7 +196,7 @@
     filter: url(#paper);
     overflow: hidden;
     opacity: 0.5;
-    height: 170vh;
+    height: 190vh;
     margin: auto;
   }
 
@@ -206,10 +212,9 @@
     border-radius: 10px;
     /* top: 10%; */
     margin: auto;
-    height: 160vh;
+    height: 180vh;
     /* padding-bottom: 2rem; */
     /* z-index: 10000; */
-    /* overflow: scroll; */
   }
 
   .country {
@@ -230,7 +235,7 @@
     position: absolute;
     top: 10px;
     /* right: 50px;  */
-    width: 15em;
+    width: 14em;
     padding: 0.5em 0.5em;
     /* justify-content: space-between; */
     background: #fff;
@@ -240,6 +245,7 @@
     border: 1px solid #ddd;
     z-index: 100;
     pointer-events: none;
-    /* background:red */
+
+    font-size: 0.9em;
   }
 </style>

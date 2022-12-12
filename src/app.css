@@ -1,3 +1,10 @@
+*,
+*:after,
+*:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -17,7 +24,7 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: cornflowerblue;
   text-decoration: inherit;
 }
 a:hover {
@@ -33,9 +40,11 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-family: "Mansalva";
+  font-size: 2.6em;
   line-height: 1.1;
-  filter: url("#watercolor-3");
+  /* color: #323a4c; */
+  filter: url("#watercolor-2");
 }
 
 h4 {
