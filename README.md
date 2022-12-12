@@ -14,6 +14,10 @@ Based on my concept, I created a moodboard that features fluid, lightweight wate
 
 ### Moodboard
 
+   <img src="./moodboard.png" width="800" alt="moodboard">
+
+See [here](https://www.figma.com/file/vyBy3nNbMTu3WEkEARfrl6/Major-Studio-1-Project-3-Leisure-Second-Draft?node-id=0%3A1&t=yVt39wOLql6K6Pnh-0) for the initial Figma prototype.
+
 ### Technical Considerations
 
 I also decided to take this opportunity to learn to build a project using d3 and Svelte. Through this introductory exercise, I learned some basic Svelte concepts such as loops, value binding, tween, scrollytelling, and props. The below technical components were implemented.
