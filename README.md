@@ -1,47 +1,40 @@
-# Svelte + Vite
+# Gender Gap in Time Use
 
-This template should help get you started developing with Svelte in Vite.
+This is the final interactive project at my Major Studio 1 class in collaboration with the UN. I picked Gender Equality as my umbrella theme.
 
-## Recommended IDE Setup
+### Concept and Inspiration
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+I was struck by this [scatterplot](https://ourworldindata.org/grapher/minutes-spent-on-leisure?time=latest) depicting gender gap in leisure time across the world published by _OCED Gender Data_ and visualized by _Our World in Data_ and I decided to build my visualization based on this data source.
 
-## Need an official Svelte framework?
+Inspired by [Waitbutwhy](https://waitbutwhy.com/2014/05/life-weeks.html)'s Life-Weeks visualization, and many other time use visualizations by [FlowingData](https://flowingdata.com/tag/time-use/), I decided to use rectangles as the primary visual element representing time. To make the visualization more aesthetically exciting, I opted to layer on a watercolor, handdrawn theme to give it a low-tech touch.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+### Design and Prototype
 
-## Technical considerations
+Based on my concept, I created a moodboard that features fluid, lightweight watercolor palette, and blurry abstract silhouettes.
 
-**Why use this over SvelteKit?**
+### Moodboard
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+### Technical Considerations
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+I also decided to take this opportunity to learn to build a project using d3 and Svelte. Through this introductory exercise, I learned some basic Svelte concepts such as loops, value binding, tween, scrollytelling, and props. The below technical components were implemented.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+- Svelte scrollytelling
+- Interactive d3 waffle chart
+- Small multiples of d3 stacked bar chart
+- Svelte tween animation
+- SVG watercolor filter
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+### Current Iteration and Planned Changes
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+As of Dec 12, 2022, I deployed the preliminary version of the visualization with a few outstanding improvements in mind.
 
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+- Proper positioning of tooltip
+- More refined tooltip formatting
+- Responsive waffle and stacked bar charts
 
 ```js
 // store.js
 // An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+import { writable } from "svelte/store";
+export default writable(0);
 ```
