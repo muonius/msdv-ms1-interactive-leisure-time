@@ -8,7 +8,7 @@
   let height;
   $: square = width / 10;
   $: gap = square / 10;
-  $: womenWidth = (width * 0.9) / 10;
+  $: womenWidth = (width * 0.833) / 10;
   $: womenHeight = width / 10;
 
   import { tweened } from "svelte/motion";
