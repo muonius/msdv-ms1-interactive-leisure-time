@@ -27,7 +27,7 @@
 </svelte:head>
 
 <section>
-  <div class="cover" />
+  <main class="cover" />
 
   <div class="hero">
     <h1>
@@ -95,11 +95,12 @@
   }
 
   .cover {
-    /* width: 100%; */
+    width: 100%;
     height: 90vh;
     background-image: url("/cover.png");
     background-position: center;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     /* background-attachment: fixed; */
     /* background-repeat: round; */
   }

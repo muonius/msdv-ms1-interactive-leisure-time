@@ -4,7 +4,7 @@
   import { annotate } from "https://unpkg.com/rough-notation?module";
 
   let data;
-
+  let slider;
   let comparison = {
     Men: { Leisure: 13, "Unpaid care work": 10, "Paid work or study": 4 },
     Women: { Leisure: 12, "Unpaid care work": 10, "Paid work or study": 4 },
@@ -75,13 +75,13 @@
       .attr("width", squareSize)
       .attr("height", squareSize)
       .attr("fill", (d) => colorWaffleScale(d.category))
-      .attr("stroke", (d) => colorWaffleScale(d.category))
-      .attr("stroke-width", data[0] == "Men" ? "1.5px" : "0.5px")
-      .style("fill", (d) => {
-        if (data[0] == "Men") {
-          return "none";
-        }
-      })
+      // .attr("stroke", (d) => colorWaffleScale(d.category))
+      // .attr("stroke-width", data[0] == "Men" ? "1.5px" : "0.5px")
+      // .style("fill", (d) => {
+      //   if (data[0] == "Men") {
+      //     return "none";
+      //   }
+      // })
       .attr("x", function (d, i) {
         //group n squares for column
         let colIndex = Math.floor(i % columns);
@@ -162,7 +162,7 @@
     d3.selectAll("#waffle").html("");
   }
   onMount(async () => {
-    var slider = document.getElementById("slider");
+    slider = document.getElementById("slider");
     var output = document.getElementById("title");
     output.innerHTML = `<h4>Slide to Compare Time Spent at The Age of <span class="highlight"  style="text-decoration:underline; color:cornflowerblue">${slider.value}</span></h4>`; // Display the default slider value
     let summary = document.querySelector("#summary");
@@ -179,6 +179,7 @@
       drawWaffle(data, waffleData, 18);
     });
     // Update the current slider value (each time you drag the slider handle)
+
     slider.oninput = function () {
       clearLayout();
       const waffleGender = d3.groups(waffleData, (d) => d.gender);
@@ -193,8 +194,6 @@
         summary.innerHTML = `<p>On average, at the age of <span><strong>18</strong></span>, women have <span class="leisure" style="padding-left: 5px; padding-right:5px;background:#AFBAFC; font-size:1.2rem"><strong>1</strong></span> weeks less leisure time than men.</p>`;
       }
     };
-    const n1 = document.querySelector(".highlight");
-    const a2 = annotate(n1, { type: "underline", color: "red" });
   });
 </script>
 
